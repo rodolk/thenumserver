@@ -30,7 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-mainClassName = 'com.rodolk.numserver.Main'
+mainClassName = 'com.rodolk.numserver.logserver.Main'
 
 shadowJar {
     baseName = 'numserver-shadow'
