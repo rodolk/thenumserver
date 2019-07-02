@@ -1,0 +1,39 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'java'
+    id 'application'
+    id 'idea'
+    id 'eclipse'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // Dependencies go here
+
+    testCompile 'junit:junit:4.12'
+}
+
+mainClassName = 'com.rodolk.numserver.Main'
+
+shadowJar {
+    baseName = 'numserver-shadow'
+    classifier = null
+    version = null
+    manifest {
+        attributes 'Description': 'Numserver application JAR'
+    }
+}
+
+
