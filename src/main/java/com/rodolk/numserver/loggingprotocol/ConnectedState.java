@@ -4,6 +4,16 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+/**
+ * ConnectedState is the main state where the protocol is reading data sent by the client.
+ * It parses the data and checks correctness. 
+ * Then it calls <code>protocol_.dataConsumer_.processData<\code> to process the 
+ * received and checked data.
+ * If 'terminate\n' is received from the client it will transition to TerminateState.
+ * 
+ * @author rodolk
+ *
+ */
 public class ConnectedState extends State {
 
 	ArrayProvider.ArrayElement arrayElem_;
@@ -15,6 +25,29 @@ public class ConnectedState extends State {
 		arrayElem_ = protocol_.arrayProvider_.getArray();
 	}
 	
+	/**
+	 * Reads data sent by client, parses it and checks correctness. It tries to read a complete 
+	 * buffer but it could read less than a buffer. The buffer size is 2 typical MTUs of 1500 - 40
+	 * to be able to read up to two full TCP messages for a client with an increased congestion window.
+	 * However we don't want too big buffer to avoid external fragmentation and waste of memory.
+	 * An optimization done here is that if too few characters were received, this method reads again 
+	 * from the socket with a smaller timeout of 200ms. This should be enough for most RTTs in North America
+	 * and Europe. This is done to try to read into the buffer and process as much data as possible.
+	 * Because of the stream nature of TCP, we need to consider a number could be received partially. 
+	 * In this case the partial number is copied to initial part of the next buffer.
+	 * We need to set a read timeout for the socket for a case of network fragmentation or a client
+	 * just stopping sending data.
+	 * If the letter 't' is received as first character after '\n', then the protocol transitions to
+	 * TermianteState.
+	 * 
+	 * @return	<code>State</code> ConnectedState if still reading data
+	 *                             TerminateState if it received 'terminate\n'
+	 * 
+	 * @throws ProtcolException If there is an error in the data received (READER_ERROR), 
+	 *                          there is a socket error (SOCKET_ERROR), or connection is closed 
+	 *                          by client (CLOSED)
+	 * 
+	 */
 	@Override
 	public State process() throws ProtocolException {
 		int len = 0;

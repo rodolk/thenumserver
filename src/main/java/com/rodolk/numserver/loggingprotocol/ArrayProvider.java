@@ -2,6 +2,17 @@ package com.rodolk.numserver.loggingprotocol;
 
 import java.util.LinkedList;
 
+/**
+ * ArrayProvider contains pre-allocated arrays to be used by other classes that need
+ * to read data or process data. This is necessary to improve performance and avoid
+ * continuous allocation and free of memory which also generates memory fragmentation.
+ * freeCharArrayList_ is a LinkedList of ArrayElement that are retrieved by clients,
+ * When they are not used anymore, ArrayElement's are returned and added to the end of 
+ * the linked list. 
+ * 
+ * @author rodolk
+ *
+ */
 public class ArrayProvider {
 	private LinkedList<ArrayElement> freeCharArrayList_;
 	private int quantity_;

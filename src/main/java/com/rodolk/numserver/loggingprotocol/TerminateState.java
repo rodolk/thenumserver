@@ -3,6 +3,14 @@ package com.rodolk.numserver.loggingprotocol;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
+/**
+ * TerminateState is trying to read the complete 'terminate\n' string.
+ * This is the final state of the protocol when there is no error or connection
+ * is not closed.
+ * 
+ * @author rodolk
+ *
+ */
 public class TerminateState extends State {
 
 	char[] charArray_;
@@ -24,6 +32,18 @@ public class TerminateState extends State {
 		nextPos_ = i;
 	}
 	
+	/**
+	 * Reads data sent by client, until all letters from 'termiante\n' are received.
+	 * When the complete string is received including new line, a protocol exception
+	 * with error code ProtocolException.ErrorCode.END is thrown.
+	 * 
+	 * @return	<code>State</code> TerminateState if it did not receive all letters yet.
+	 * 
+	 * @throws ProtcolException If there is an error in the data received (READER_ERROR), 
+	 *                          there is a socket error (SOCKET_ERROR), or connection is closed 
+	 *                          by client (CLOSED), or all letters are received (END)
+	 * 
+	 */
 	@Override
 	public State process() throws ProtocolException {
 		int len;
