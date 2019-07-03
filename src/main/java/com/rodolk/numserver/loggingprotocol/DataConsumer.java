@@ -9,15 +9,15 @@ package com.rodolk.numserver.loggingprotocol;
  *
  */
 public interface DataConsumer {
-	
-	/**
-	 * It processes and array element which contains the array with data received and 
-	 * corresponding metadata.
-	 * 
-	 * @param arrayElem		Contains the array with data
-	 * @param initialPos	Offset to read the array, always 0.
-	 * @param totalNumbers	Total amount of numbers in the array
-	 * @param numberLen		Length of each number including '\n'
-	 */
-	void processData(ArrayProvider.ArrayElement arrayElem, int initialPos, int totalNumbers, int numberLen);
+    
+    /**
+     * It processes and array element which contains the array with data received and 
+     * corresponding metadata.
+     * 
+     * @param arrayElem        Contains the array with data
+     * @param initialPos    Offset to read the array, always 0.
+     * @param totalNumbers    Total amount of numbers in the array
+     * @param numberLen        Length of each number including '\n'
+     */
+    void processData(ArrayProvider.ArrayElement arrayElem, int initialPos, int totalNumbers, int numberLen);
 }
