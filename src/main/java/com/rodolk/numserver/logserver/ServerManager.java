@@ -39,8 +39,8 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
     public ServerManager() {
         connectionHandlingExecutor_ = Executors.newFixedThreadPool(5);
         intArraysHandlingExecutor_  = Executors.newFixedThreadPool(10);
-        connArrayProvider_ = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_);
-        logArrayProvider_  = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_);
+        connArrayProvider_ = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_, ApplicationProtocol.getNewLineLen());
+        logArrayProvider_  = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_, ApplicationProtocol.getNewLineLen());
         connArrayQueue_    = new BufferQueue();
         logArrayQueue_     = new BufferQueue();
         Statistics.initialize(kMaxIntProcessors_);

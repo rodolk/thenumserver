@@ -19,12 +19,28 @@ public class ArrayProvider {
     private int arrayLen_;
     private boolean terminated_ = false;
     
+    /**
+     * ArrayElement contains the array of characters and metadata:
+     * <ul>
+     * <li> initialPos_     is the offset of data in the array
+     * <li> totalNumbers_   is the amount of numbers with new line characters in the array
+     * <li> numberLen_      is the length of each number including new line characters
+     * <li> newLineLen_     is the length of new line characters
+     * </ul>
+     * 
+     * @author rodolk
+     *
+     */
     public class ArrayElement {
         public char[] array_ = null;
         public int initialPos_ = 0;
         public int totalNumbers_ = 0;
-        public int numberLen_ = 0;
+        public int numberLen_ = 0; //Length of each number including new line characters
+        public int newLineLen_ = 0; //Length of new line
         
+        private ArrayElement(int nlLen) {
+            newLineLen_ = nlLen;
+        }
         public void setArray(char[] charArray, int initialPos, int totalNumbers, int numberLen) {
             array_ = charArray;
             initialPos_ = initialPos;
@@ -38,12 +54,12 @@ public class ArrayProvider {
         }
     }
     
-    public ArrayProvider(int len, int initialValue) {
+    public ArrayProvider(int len, int initialValue, int newLineLen) {
         freeCharArrayList_ =  new LinkedList<ArrayElement>();
         quantity_ = initialValue;
         arrayLen_ = len;
         while(0 < initialValue--) {
-            ArrayElement elem = new ArrayElement();
+            ArrayElement elem = new ArrayElement(newLineLen);
             elem.array_ = new char[len];
             freeCharArrayList_.add(elem);
         }

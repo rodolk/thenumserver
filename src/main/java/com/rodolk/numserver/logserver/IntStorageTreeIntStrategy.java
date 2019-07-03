@@ -5,7 +5,7 @@ import java.util.TreeMap;
 public class IntStorageTreeIntStrategy extends IntStorageStrategy{
     TreeMap<Integer, Boolean> treeMap_ = new TreeMap<Integer, Boolean>();
     
-    public int getSize() {
+    synchronized public int getSize() {
         return treeMap_.size();
     }
     
@@ -14,9 +14,9 @@ public class IntStorageTreeIntStrategy extends IntStorageStrategy{
         int value = 0;
         int tmp;
         int pos = 0;
-        for(pos = 0;pos < len - 1; pos++) {
+        for(pos = 0;pos < len; pos++) {
             tmp = array[offset + pos] - '0';
-            value += tmp * Math.pow(10, (len - 2 - pos));
+            value += tmp * Math.pow(10, (len - 1 - pos));
         }
         if (!treeMap_.containsKey(value)) {
             treeMap_.put(value, true);

@@ -28,12 +28,22 @@ public class ApplicationProtocol {
     public static int kArrayLen = 1460 * 2; //2 (typical MTUs - 40) for 2 full packets
     public static int kMinThreshold = kArrayLen / 10; 
     public static int kIntLen = 9;
+    public static int kIntTotLen = 10;
+    private static char[] KNewLine = {'\n'}; 
+    private static int KNewLineLen = 1; 
     Socket socket_;
     State state_;
     BufferedReader inBuffReader_;
     ArrayProvider arrayProvider_;
     DataConsumer dataConsumer_ = null;
     boolean terminate_ = false;
+    
+    public static char[] getNewLine() {
+        return KNewLine;
+    }
+    public static int getNewLineLen() {
+        return KNewLineLen;
+    }
     
     public ApplicationProtocol(Socket socket, ArrayProvider prov) throws ProtocolException {
         state_ = new IdleState(this);

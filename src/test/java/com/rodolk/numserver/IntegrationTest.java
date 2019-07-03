@@ -66,7 +66,7 @@ public class IntegrationTest {
                     for(numIdx = 0; numIdx < inArrElem.totalNumbers_; numIdx++) {
                         boolean contains = store_.contains(inArrElem.array_, 
                                           (inArrElem.initialPos_ + (numIdx * inArrElem.numberLen_)), 
-                                          inArrElem.numberLen_);
+                                          inArrElem.numberLen_ - inArrElem.newLineLen_);
                         if (contains != false) {
                             numWrong++;
                         }
@@ -107,8 +107,8 @@ public class IntegrationTest {
         public ServerManagerTest() {
             connectionHandlingExecutor_ = Executors.newFixedThreadPool(5);
             intArraysHandlingExecutor_  = Executors.newFixedThreadPool(10);
-            connArrayProvider_ = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_);
-            logArrayProvider_  = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_);
+            connArrayProvider_ = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_, ApplicationProtocol.getNewLineLen());
+            logArrayProvider_  = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_, ApplicationProtocol.getNewLineLen());
             connArrayQueue_    = new BufferQueue();
             logArrayQueue_     = new BufferQueue();
             Statistics.initialize(kMaxIntProcessors_);
