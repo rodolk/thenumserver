@@ -1,9 +1,9 @@
-#Instructions to run this code
+# Instructions to run this code
 
 ## Install
 Download zip and unzip or
 Clone with git:
-git clone https://github.com/rodolk/thenumserver.git
+`git clone https://github.com/rodolk/thenumserver.git`
 
 ## Install Java
 
@@ -52,11 +52,16 @@ Open `build/docs/javadoc/index.html` with a browser.
 
 
 ### Troubleshooting
-If you do't have tools.jar properly installed and build `./gradlew build` fails, try removing  the following lines lines from file from `build.gradle`:
+If you don't have tools.jar properly installed and build `./gradlew build` fails, try removing  the following lines lines from file from `build.gradle`:
+
 javadoc {
     source = sourceSets.main.allJava
     classpath = configurations.compile
 }
+
+Build may fail for not having and using Java 1.8.
+In Linux, if you have many Java versions make sure gradlew uses the proper 1.8 version:
+`export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64`
 
 
 
