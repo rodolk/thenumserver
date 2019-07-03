@@ -53,11 +53,12 @@ Open `build/docs/javadoc/index.html` with a browser.
 
 ### Troubleshooting
 If you don't have tools.jar properly installed and build `./gradlew build` fails, try removing  the following lines lines from file from `build.gradle`:
-
+```
 javadoc {
     source = sourceSets.main.allJava
     classpath = configurations.compile
 }
+```
 
 Build may fail for not having and using Java 1.8.
 In Linux, if you have many Java versions make sure gradlew uses the proper 1.8 version:
