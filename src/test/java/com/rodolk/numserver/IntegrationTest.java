@@ -107,6 +107,7 @@ public class IntegrationTest {
         public ServerManagerTest() {
             connectionHandlingExecutor_ = Executors.newFixedThreadPool(5);
             intArraysHandlingExecutor_  = Executors.newFixedThreadPool(10);
+            ApplicationProtocol.systemNewLine = false;
             connArrayProvider_ = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_, ApplicationProtocol.getNewLineLen());
             logArrayProvider_  = new ArrayProvider(ApplicationProtocol.kArrayLen, kArrayProviderBuffers_, ApplicationProtocol.getNewLineLen());
             connArrayQueue_    = new BufferQueue();
@@ -252,6 +253,8 @@ public class IntegrationTest {
     public class TestClient extends Thread {
         public int amount_ = kNumbers;
         public int type_ = 0;
+        public int numLen = 9;
+        public int newLineEnd = 2;
         
         public void run() {
             try {
@@ -259,9 +262,9 @@ public class IntegrationTest {
                 OutputStream os = socket.getOutputStream();
                 if (type_ == 0) {
                     for(int i = 0; i < amount_; i++) {
-                        String valString = String.format("%09d\n",  i);
+                        String valString = String.format("%09d\r\n",  i);
                         char[] arr = valString.toCharArray();
-                        for(int j =0; j < 10; j++) {
+                        for(int j =0; j < (numLen + newLineEnd); j++) {
                             os.write(arr[j]);
                         }
                     }
@@ -271,23 +274,23 @@ public class IntegrationTest {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    char[] terminateArray = {'t', 'e', 'r', 'm', 'i', 'n', 'a', 't', 'e', '\n'};
-                    for(int j =0; j < 10; j++) {
+                    char[] terminateArray = {'t', 'e', 'r', 'm', 'i', 'n', 'a', 't', 'e', '\r', '\n'};
+                    for(int j =0; j < (numLen + newLineEnd); j++) {
                         os.write(terminateArray[j]);
                     }
                 } else if (type_ == 1) {
                     for(int i = amount_ - 1; i >= 0; i--) {
-                        String valString = String.format("%09d\n",  i);
+                        String valString = String.format("%09d\r\n",  i);
                         char[] arr = valString.toCharArray();
-                        for(int j =0; j < 10; j++) {
+                        for(int j =0; j < (numLen + newLineEnd); j++) {
                             os.write(arr[j]);
                         }
                     }
                 } else if (type_ == 2) {
                     for(int i = 10000; i < amount_ - 10000; i++) {
-                        String valString = String.format("%09d\n",  i);
+                        String valString = String.format("%09d\r\n",  i);
                         char[] arr = valString.toCharArray();
-                        for(int j =0; j < 10; j++) {
+                        for(int j =0; j < (numLen + newLineEnd); j++) {
                             os.write(arr[j]);
                         }
                     }

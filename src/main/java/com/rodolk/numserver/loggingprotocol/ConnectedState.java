@@ -18,10 +18,14 @@ public class ConnectedState extends State {
 
     ArrayProvider.ArrayElement arrayElem_;
     private int nextOffset_ = 0;
+    private static char[] newLineChars_ = null; 
+    private int newLineLen_ = 0; 
+    private int nextNewLineIdx_ = 0;
 
     public ConnectedState(ApplicationProtocol prot) {
         super(prot);
-
+        newLineLen_ = protocol_.getNewLineLen();
+        newLineChars_ = protocol_.getNewLine();
         arrayElem_ = protocol_.arrayProvider_.getArray();
     }
     
@@ -52,6 +56,7 @@ public class ConnectedState extends State {
     public State process() throws ProtocolException {
         int len = 0;
         State nextState = this;
+        nextNewLineIdx_ = 0;
         
         try {
             len = protocol_.inBuffReader_.read(arrayElem_.array_, nextOffset_, protocol_.kArrayLen - nextOffset_);
@@ -90,16 +95,19 @@ public class ConnectedState extends State {
             int i;
             int totalNumbers = 0;
             int nextNumber = -1;
+            int firstPosOfNewLine = protocol_.kIntLen + 1;
+            int lastPosOfNewLine = protocol_.kIntLen + newLineLen_;
             boolean terminate = false;
             for(i = 0; i < len && !terminate; i++) {
-                if ((i + 1) % (protocol_.kIntLen + 1) != 0) {
+                int valToCheck = (i + 1) % lastPosOfNewLine;
+                if (valToCheck != 0 && valToCheck < firstPosOfNewLine) {
                     if (arrayElem_.array_[i] < '0' || arrayElem_.array_[i] > '9') {
-                        if ((i + 1) % (protocol_.kIntLen + 1) == 1 && arrayElem_.array_[i] == 't') {
+                        if ((i + 1) % (protocol_.kIntLen + newLineLen_) == 1 && arrayElem_.array_[i] == 't') {
                             terminate = true;
                         } else {
                             if (protocol_.dataConsumer_ != null && totalNumbers > 0) {
                                 protocol_.dataConsumer_.processData(arrayElem_, 0, 
-                                        totalNumbers, (protocol_.kIntLen + 1));
+                                        totalNumbers, (protocol_.kIntLen + newLineLen_));
                             } else {
                                 protocol_.arrayProvider_.returnArray(arrayElem_);
                             }
@@ -107,17 +115,21 @@ public class ConnectedState extends State {
                         }
                     } // else OK
                 } else {
-                    if (arrayElem_.array_[i] != '\n') {
+                    char nexNewLineCharExpected = newLineChars_[nextNewLineIdx_];
+                    nextNewLineIdx_ = (nextNewLineIdx_ + 1) % newLineLen_; 
+                    if (arrayElem_.array_[i] != nexNewLineCharExpected) {
                         if (protocol_.dataConsumer_ != null && totalNumbers > 0) {
                             protocol_.dataConsumer_.processData(arrayElem_, 0, 
-                                    totalNumbers, (protocol_.kIntLen + 1));
+                                    totalNumbers, (protocol_.kIntLen + newLineLen_));
                         } else {
                             protocol_.arrayProvider_.returnArray(arrayElem_);
                         }
                         throw new ProtocolException("Erroneous data", ProtocolException.ErrorCode.READER_ERROR);
                     } else {
-                        nextNumber = i + 1;
-                        totalNumbers++;
+                        if (nextNewLineIdx_ == 0) {
+                            nextNumber = i + 1; //This is OK, next number begins at next position
+                            totalNumbers++;
+                        }
                     }
                 }
             }
@@ -136,7 +148,7 @@ public class ConnectedState extends State {
                 }
                 if (protocol_.dataConsumer_ != null && totalNumbers > 0) {
                     protocol_.dataConsumer_.processData(arrayElem_, 0, 
-                            totalNumbers, (protocol_.kIntLen + 1));
+                            totalNumbers, (protocol_.kIntLen + newLineLen_));
                 } else {
                     protocol_.arrayProvider_.returnArray(arrayElem_);
                 }
@@ -145,7 +157,7 @@ public class ConnectedState extends State {
                 nextState = new TerminateState(protocol_, arrayElem_.array_, i - 1, len - 1);
                 if (protocol_.dataConsumer_ != null && totalNumbers > 0) {
                     protocol_.dataConsumer_.processData(arrayElem_, 0, 
-                            totalNumbers, (protocol_.kIntLen + 1));
+                            totalNumbers, (protocol_.kIntLen + newLineLen_));
                 } else {
                     protocol_.arrayProvider_.returnArray(arrayElem_);
                 }

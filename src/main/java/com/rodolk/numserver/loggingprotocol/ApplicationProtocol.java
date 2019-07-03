@@ -29,8 +29,10 @@ public class ApplicationProtocol {
     public static int kMinThreshold = kArrayLen / 10; 
     public static int kIntLen = 9;
     public static int kIntTotLen = 10;
-    private static char[] KNewLine = {'\n'}; 
-    private static int KNewLineLen = 1; 
+    private static char[] KNewLine = {'\r','\n'}; 
+    private static int KNewLineLen = 2; 
+    public static String kTerminateString = "terminate";
+    public static boolean systemNewLine = true;
     Socket socket_;
     State state_;
     BufferedReader inBuffReader_;
@@ -39,10 +41,18 @@ public class ApplicationProtocol {
     boolean terminate_ = false;
     
     public static char[] getNewLine() {
-        return KNewLine;
+        if (systemNewLine) {
+            return System.getProperty("line.separator").toCharArray();
+        } else {
+            return KNewLine;
+        }
     }
     public static int getNewLineLen() {
-        return KNewLineLen;
+        if (systemNewLine) {
+            return System.getProperty("line.separator").length();
+        } else {
+            return KNewLineLen;
+        }
     }
     
     public ApplicationProtocol(Socket socket, ArrayProvider prov) throws ProtocolException {

@@ -15,15 +15,29 @@ public class TerminateState extends State {
 
     char[] charArray_;
     int nextPos_;
-    char[] terminateArray_ = {'t', 'e', 'r', 'm', 'i', 'n', 'a', 't', 'e', '\n'};
+    char[] terminateArray_ = null;
     boolean error_ = false;
+    int newLineLen_;
+    char[] newLineCharArray_;
     
     public TerminateState(ApplicationProtocol prot, char[] charArray, int currentPos, int lastPos) {
         super(prot);
         
-        charArray_ = new char[(protocol_.kIntLen + 1)];
+        newLineLen_ = protocol_.getNewLineLen();
+        newLineCharArray_ = protocol_.getNewLine();
+        
+        terminateArray_ = new char[protocol_.kTerminateString.length() + newLineLen_];
+        for(int i = 0; i < protocol_.kTerminateString.length(); i++) {
+            terminateArray_[i] = protocol_.kTerminateString.charAt(i);
+        }
+        
+        for(int i = 0; i < newLineLen_; i++) {
+            terminateArray_[protocol_.kTerminateString.length() + i] = newLineCharArray_[i];
+        }
+
+        charArray_ = new char[(protocol_.kIntLen + newLineLen_)];
         int i;
-        for(i = 0; i < (lastPos - currentPos + 1) && i < (protocol_.kIntLen + 1); i++) {
+        for(i = 0; i < (lastPos - currentPos + 1) && i < (protocol_.kIntLen + newLineLen_); i++) {
             charArray_[i] = charArray[currentPos + i];
             if (terminateArray_[i] != charArray_[i]) {
                 error_ = true;
@@ -52,12 +66,12 @@ public class TerminateState extends State {
             throw new ProtocolException("Erroneous data", ProtocolException.ErrorCode.READER_ERROR);
         }
         
-        if (nextPos_ == (protocol_.kIntLen + 1)) {
+        if (nextPos_ == (protocol_.kIntLen + newLineLen_)) {
             throw new ProtocolException("End", ProtocolException.ErrorCode.END);
         }
         
         try {
-            len = protocol_.inBuffReader_.read(charArray_, nextPos_, (protocol_.kIntLen + 1) - nextPos_);
+            len = protocol_.inBuffReader_.read(charArray_, nextPos_, (protocol_.kIntLen + newLineLen_) - nextPos_);
         } catch (SocketTimeoutException e1) {
             e1.printStackTrace();
             throw new ProtocolException("Socket timeout", ProtocolException.ErrorCode.SOCKET_ERROR);
@@ -78,7 +92,7 @@ public class TerminateState extends State {
             for(i = nextPos_; i < nextPos_ + len; i++) {
                 if (terminateArray_[i] != charArray_[i]) {
                     throw new ProtocolException("Erroneous data", ProtocolException.ErrorCode.READER_ERROR);
-                } if (i == (protocol_.kIntLen + 1)) {
+                } if (i == (protocol_.kIntLen + newLineLen_)) {
                     throw new ProtocolException("End", ProtocolException.ErrorCode.END);
                 }
             }

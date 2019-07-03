@@ -38,4 +38,8 @@ public class BufferQueue {
             return linkedList_.poll();
         }
     }
+    
+    synchronized public boolean isEmpty() {
+        return linkedList_.isEmpty();
+    }
 }

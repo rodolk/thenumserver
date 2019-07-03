@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import com.rodolk.numserver.loggingprotocol.ApplicationProtocol;
 import com.rodolk.numserver.loggingprotocol.ArrayProvider;
@@ -19,7 +20,8 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
     public static final int kArrayProviderBuffers_ = kMaxconnections_ * 10;
     public static final short kPort_ = 4000;
     public static final int kMaxIntProcessors_ = 10;
-    public static final String kFilename_ = "output.txt";
+    public static final String kFilename_ = "numbers.log";
+    public static final int kSamplePeriodMS_ = 10000;
     private ExecutorService connectionHandlingExecutor_;
     private ExecutorService intArraysHandlingExecutor_;
     private int totalConnections_ = 0;
@@ -75,7 +77,7 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
         synchronized(syncObject_) {
             while(!terminate_) {
                 try {
-                    syncObject_.wait(10000);
+                    syncObject_.wait(kSamplePeriodMS_);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
@@ -88,7 +90,16 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
                         periodDuplicates + " duplicates. Unique total: " + uniqueTotal);
             }
         }
+        
         terminateAll();
+        
+        statsInstance_.setSnapshot();
+        long periodDuplicates = statsInstance_.getPeriodDuplicateCounter();
+        long periodUniques = statsInstance_.getPeriodUniqueCounter();
+        long uniqueTotal = statsInstance_.getTotalUniqueCounter();
+        
+        System.out.println(new Date() + " - Final report---Received " + periodUniques + " unique numbers, " + 
+                periodDuplicates + " duplicates. Unique total: " + uniqueTotal);
     }
     
     public void setTerminate() {
@@ -102,28 +113,24 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
         if (evt.getType() == 1) {
             ConnectionHandlerEvent chEvt = (ConnectionHandlerEvent)evt;
             if (chEvt.getSubType() == 1) {
+                totalClosedConnections_++;
                 setTerminate();
             } else if (chEvt.getSubType() == 2) {
                 totalClosedConnections_++;
                 if (totalClosedConnections_ == totalConnections_) {
                     setTerminate();
                 }
+            } else if (chEvt.getSubType() == 3) {
+                totalClosedConnections_++;
             }
         }
     }
     
     synchronized private boolean terminateAll() {
+        //First stop all connections
         for(ConnectionHandler connHandler : connHandlerArr_) {
             connHandler.setTerminate();
         }
-        for(IntProcessor proc : intProcessorArr_) {
-            proc.setTerminate();
-        }
-        fileWriterThread_.setTerminate();
-        connArrayQueue_.setTerminated();
-        logArrayQueue_.setTerminated();
-        connArrayProvider_.setTerminated();
-        logArrayProvider_.setTerminated();
         connListener_.setEnd();
         
         try {
@@ -136,9 +143,66 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
         connectionHandlingExecutor_.shutdown();
+        try {
+            if (!connectionHandlingExecutor_.awaitTermination(60, TimeUnit.SECONDS)) {
+                connectionHandlingExecutor_.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            System.out.println("Exception waiting for connection handling threads to terminate");
+            connectionHandlingExecutor_.shutdownNow();
+        }
+        
+        //Check queues are empty
+        
+        //A little dirty but this is the end
+        while(!connArrayQueue_.isEmpty()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        //A little dirty but this is the end
+        while(!logArrayQueue_.isEmpty()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        //A little dirty but this is the end
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        for(IntProcessor proc : intProcessorArr_) {
+            proc.setTerminate();
+        }
+
+        connArrayQueue_.setTerminated();
+        logArrayQueue_.setTerminated();
+        connArrayProvider_.setTerminated();
+        logArrayProvider_.setTerminated();
         intArraysHandlingExecutor_.shutdown();
+        
+        try {
+            if (!intArraysHandlingExecutor_.awaitTermination(60, TimeUnit.SECONDS)) {
+                intArraysHandlingExecutor_.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            System.out.println("Exception waiting for numbers handling threads to terminate");
+            intArraysHandlingExecutor_.shutdownNow();
+        }
+
+        fileWriterThread_.setTerminate();
         
         try {
             connListener_.join();

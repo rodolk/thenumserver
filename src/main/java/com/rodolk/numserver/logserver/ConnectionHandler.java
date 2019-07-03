@@ -10,6 +10,7 @@ import com.rodolk.numserver.loggingprotocol.ProtocolException;
 public class ConnectionHandler extends Subject implements Runnable {
     private ApplicationProtocol protocol_;
     private boolean error_ = false;
+    private boolean terminated_ = false;
     
     public class ConnectionHandlerEvent extends Subject.Event {
         private int subType_ = 0;
@@ -34,6 +35,7 @@ public class ConnectionHandler extends Subject implements Runnable {
     }
     
     public void setTerminate() {
+        terminated_ = true;
         protocol_.setTerminate();
     }
 
@@ -43,8 +45,14 @@ public class ConnectionHandler extends Subject implements Runnable {
         
         try {
             protocol_.execute();
-            ConnectionHandlerEvent evt = new ConnectionHandlerEvent(2); //Connection closed
-            notify(evt);
+            if (terminated_) {
+                ConnectionHandlerEvent evt = new ConnectionHandlerEvent(3); //Connection closed because application terminated
+                notify(evt);
+            } else {
+                ConnectionHandlerEvent evt = new ConnectionHandlerEvent(2); //Connection closed by client
+                notify(evt);
+            }
+            
         } catch (ProtocolException e) {
             if (e.getError() == ProtocolException.ErrorCode.END) {
                 ConnectionHandlerEvent evt = new ConnectionHandlerEvent(1); //Process terminated by client
