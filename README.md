@@ -35,7 +35,7 @@ jar file in the `build/libs` folder.
 
 ### Running application from the command line
 
-Build a shadow jar from your project by running `./gradlew shadowJar`.  This will create a `numserver-shadow.jar` file in the `build/libs` directory.
+Build a shadow jar by running `./gradlew shadowJar`.  This will create a `numserver-shadow.jar` file in the `build/libs` directory.
 
 You can then start the application by running the command
 `java -jar ./build/lib/numserver-shadow.jar`
