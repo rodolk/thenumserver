@@ -11,6 +11,9 @@ out
 # Gradle also uses a .gradle directory for gradle state info
 .gradle
 
+# class files
+bin/**/*.class
+
 # Ideas files
 *.iml
 *.ipr
