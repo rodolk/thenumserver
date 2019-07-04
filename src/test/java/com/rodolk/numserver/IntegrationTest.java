@@ -23,6 +23,7 @@ import com.rodolk.numserver.logserver.ConnectionsListener;
 import com.rodolk.numserver.logserver.DataProcessor;
 import com.rodolk.numserver.logserver.IntFileWriterThread;
 import com.rodolk.numserver.logserver.IntProcessor;
+import com.rodolk.numserver.logserver.IntStorageBitArrayStrategy;
 import com.rodolk.numserver.logserver.IntStorageStrategy;
 import com.rodolk.numserver.logserver.IntStorageTreeIntStrategy;
 import com.rodolk.numserver.logserver.Observer;
@@ -118,7 +119,7 @@ public class IntegrationTest {
         
         synchronized public boolean startAll() {
             if (terminate_) return false;
-            IntStorageStrategy storageStrategy = new IntStorageTreeIntStrategy();
+            IntStorageStrategy storageStrategy = new IntStorageBitArrayStrategy();
             storageStrategyCopy = storageStrategy;
             Statistics.StatisticsCounter[] statsCounterArr = statsInstance_.getStatisticsCounterArray();
             for(int i = 0; i < kMaxIntProcessors_; i++) {

@@ -9,7 +9,7 @@ import com.rodolk.numserver.logserver.IntStorageBitArrayStrategy;
 import com.rodolk.numserver.logserver.IntStorageStrategy;
 import com.rodolk.numserver.logserver.IntStorageTreeIntStrategy;
 
-public class IntStorageTreeIntStrategyTest {
+public class IntStorageBitArrayStrategyTest {
     public static final int kNumberLen_  = 10;
     public static final int kNewLineLen_ = 1;
     
@@ -20,7 +20,7 @@ public class IntStorageTreeIntStrategyTest {
 
     @Test
     public void testContains() {
-        IntStorageStrategy intStorage = new IntStorageTreeIntStrategy();
+        IntStorageStrategy intStorage = new IntStorageBitArrayStrategy();
         final int maxSize = 10000000;
         char[] charArray = new char[maxSize];
         int value;

@@ -58,7 +58,7 @@ public class ServerManager extends Observer implements ConnectionsListener.NewCo
     
     synchronized public boolean startAll() {
         if (terminate_) return false;
-        IntStorageStrategy storageStrategy = new IntStorageTreeIntStrategy();
+        IntStorageStrategy storageStrategy = new IntStorageBitArrayStrategy();
         Statistics.StatisticsCounter[] statsCounterArr = statsInstance_.getStatisticsCounterArray();
         for(int i = 0; i < kMaxIntProcessors_; i++) {
             IntProcessor processor = new IntProcessor(connArrayQueue_, logArrayQueue_, 
