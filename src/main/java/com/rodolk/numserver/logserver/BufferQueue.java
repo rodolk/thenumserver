@@ -4,6 +4,13 @@ import java.util.LinkedList;
 
 import com.rodolk.numserver.loggingprotocol.ArrayProvider;
 
+/**
+ * BufferQueue is used for inter-thread communication.
+ * It implements a LinkedList of ArrayElement's that are passed from a producer to a consumer.
+ * 
+ * @author rodolk
+ *
+ */
 public class BufferQueue {
     private LinkedList<ArrayProvider.ArrayElement> linkedList_;
     private boolean terminated_ = false;

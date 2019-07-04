@@ -3,6 +3,13 @@ package com.rodolk.numserver.logserver;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Subject for Observer pattern.
+ * A class that sends notifications to unknown Observer's needs to inherit from this class.
+ * 
+ * @author rodolk
+ *
+ */
 public abstract class Subject {
     List<Observer> observersList_ = new ArrayList<Observer>();
     

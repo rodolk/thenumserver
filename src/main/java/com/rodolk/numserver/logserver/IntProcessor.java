@@ -2,6 +2,15 @@ package com.rodolk.numserver.logserver;
 
 import com.rodolk.numserver.loggingprotocol.ArrayProvider;
 
+/**
+ * This class reads ArrayElement's from a BufferQueue and determines if the numbers in the array are
+ * unique or duplicate by calling the contains method of IntStorageStrategy. Unique numbers are stored
+ * in the container.
+ * Then it creates a new ArrayElement with unique numbers and it adds it to an output BufferQueue.
+ * 
+ * @author rodolk
+ *
+ */
 public class IntProcessor implements Runnable {
     BufferQueue inputQueue_;
     BufferQueue outputQueue_;

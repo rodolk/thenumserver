@@ -7,6 +7,19 @@ import com.rodolk.numserver.loggingprotocol.ArrayProvider;
 import com.rodolk.numserver.loggingprotocol.DataConsumer;
 import com.rodolk.numserver.loggingprotocol.ProtocolException;
 
+/**
+ * A ConnectionHandler handles one socket connection with an ApplicationProtocol
+ * When the tread runs, it calls execute in the Application Protocol and the call only returns
+ * when the connection finishes. A connection can finish because of erroneous data, because the client closed
+ * the connection, because of a socket error, or because client sent 'terminate' and the whole 
+ * application is shutting down.
+ * This class inherits from Subject an notifies of the events occurred.
+ * A DataConsumer is subscribed to the ApplicationProtocol to receive arrays with numbers
+ * read from the connection.
+ * 
+ * @author rodolk
+ *
+ */
 public class ConnectionHandler extends Subject implements Runnable {
     private ApplicationProtocol protocol_;
     private boolean error_ = false;

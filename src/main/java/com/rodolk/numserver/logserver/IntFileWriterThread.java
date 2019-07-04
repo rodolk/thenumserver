@@ -5,6 +5,13 @@ import java.io.IOException;
 
 import com.rodolk.numserver.loggingprotocol.ArrayProvider;
 
+/**
+ * This class implements a thread that reads ArrayElement's from the BufferQueue and writes all numbers to a file.
+ * At this stage all numbers received are unique.
+ * 
+ * @author rodolk
+ *
+ */
 public class IntFileWriterThread extends Thread {
     BufferQueue inQueue_;
     ArrayProvider inArrayProvider_;

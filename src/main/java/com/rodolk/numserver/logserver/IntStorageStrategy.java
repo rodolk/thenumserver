@@ -1,5 +1,12 @@
 package com.rodolk.numserver.logserver;
 
+/**
+ * This is an abstract class that allows use of different strategies to store and read elements.
+ * It implements Strategy pattern.
+ * 
+ * @author rodolk
+ *
+ */
 public abstract class IntStorageStrategy {
     /**
      * Determines if a number passed as an array of characters exists in this container.

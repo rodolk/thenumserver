@@ -15,6 +15,13 @@ import com.rodolk.numserver.loggingprotocol.ArrayProvider;
 import com.rodolk.numserver.loggingprotocol.DataConsumer;
 import com.rodolk.numserver.logserver.ConnectionHandler.ConnectionHandlerEvent;
 
+/**
+ * This class manages the whole server.
+ * startAll must be called before calling execute()
+ * 
+ * @author rodolk
+ *
+ */
 public class ServerManager extends Observer implements ConnectionsListener.NewConnectionSubscriber {
     public static final int kMaxconnections_ = 5;
     public static final int kArrayProviderBuffers_ = kMaxconnections_ * 10;
