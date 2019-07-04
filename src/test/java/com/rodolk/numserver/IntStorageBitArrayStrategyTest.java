@@ -21,7 +21,7 @@ public class IntStorageBitArrayStrategyTest {
     @Test
     public void testContains() {
         IntStorageStrategy intStorage = new IntStorageBitArrayStrategy();
-        final int maxSize = 10000000;
+        final int maxSize = 20000000;
         char[] charArray = new char[maxSize];
         int value;
         //Random r = new Random();
