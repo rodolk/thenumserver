@@ -24,9 +24,9 @@ public class IntStorageBitArrayStrategy extends IntStorageStrategy {
      * in the array. Then it checks if the bit is set or not.
      * If it is not set, it sets it and returns false. Otherwise, it just returns true.
      * 
-     * @param   array the array containing the characters representing the integer
-     * @param   offset of this number in the array
-     * @param   length of the number
+     * @param   array  the array containing the characters representing the integer
+     * @param   offset offset of this number in the array
+     * @param   len    length of the number
      * 
      * @return  false   if the number doesn't exist. The number is added.
      *          true    if the number exists.
