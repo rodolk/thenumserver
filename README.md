@@ -5,6 +5,11 @@ Download zip and unzip or
 Clone with git:
 `git clone https://github.com/rodolk/thenumserver.git`
 
+## Important to take into account!!!
+This server processes numbers of 9 digits with leading zeroes followed by **system-native new line**.
+This means that if the server runs in Linux, or other Unix-like system, it will expect only character '\n' 
+following each number. If it runs in windows it will expect the sequence '\r''\n' following each number.
+
 ## Install Java
 
 It is recommended you install Java 1.8 from Oracle.
@@ -64,5 +69,9 @@ Build may fail for not having and using Java 1.8.
 In Linux, if you have many Java versions make sure gradlew uses the proper 1.8 version:
 `export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64`
 
+If your execution ends with a message of erroneous data received, consider this server processes numbers of 9 digits with 
+leading zeroes followed by **system-native new line**.
+This means that if the server runs in Linux, or other Unix-like system, it will expect only character '\n' 
+following each number. If it runs in windows it will expect the sequence '\r''\n' following each number.
 
 
