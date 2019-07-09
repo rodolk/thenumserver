@@ -33,7 +33,7 @@ import com.rodolk.numserver.logserver.Subject;
 import com.rodolk.numserver.logserver.ConnectionHandler.ConnectionHandlerEvent;
 
 public class IntegrationTest {
-    final static int kNumbers = 2000000; //2M
+    final static int kNumbers = 1000000; //2M
     public int storage1Tot = 0;
     public int storage2Tot = 0;
     public int numProcessed = 0;
