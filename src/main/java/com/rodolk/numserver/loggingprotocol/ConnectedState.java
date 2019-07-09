@@ -7,7 +7,7 @@ import java.net.SocketTimeoutException;
 /**
  * ConnectedState is the main state where the protocol is reading data sent by the client.
  * It parses the data and checks correctness. 
- * Then it calls <code>protocol_.dataConsumer_.processData<\code> to process the 
+ * Then it calls <code>protocol_.dataConsumer_.processData</code> to process the 
  * received and checked data.
  * If 'terminate\n' is received from the client it will transition to TerminateState.
  * 
@@ -47,7 +47,7 @@ public class ConnectedState extends State {
      * @return    <code>State</code> ConnectedState if still reading data
      *                             TerminateState if it received 'terminate\n'
      * 
-     * @throws ProtcolException If there is an error in the data received (READER_ERROR), 
+     * @throws ProtocolException If there is an error in the data received (READER_ERROR), 
      *                          there is a socket error (SOCKET_ERROR), or connection is closed 
      *                          by client (CLOSED)
      * 

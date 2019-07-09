@@ -24,7 +24,7 @@ public class IdleState extends State {
      * 
      * @return    <code>State</code> A ConnectedState
      * 
-     * @throws ProtcolException If there is an error in the creation of the BufferedReader
+     * @throws ProtocolException If there is an error in the creation of the BufferedReader
      * 
      */
     public State process() throws ProtocolException {

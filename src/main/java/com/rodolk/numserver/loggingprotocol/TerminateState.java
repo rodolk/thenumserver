@@ -53,7 +53,7 @@ public class TerminateState extends State {
      * 
      * @return    <code>State</code> TerminateState if it did not receive all letters yet.
      * 
-     * @throws ProtcolException If there is an error in the data received (READER_ERROR), 
+     * @throws ProtocolException If there is an error in the data received (READER_ERROR), 
      *                          there is a socket error (SOCKET_ERROR), or connection is closed 
      *                          by client (CLOSED), or all letters are received (END)
      * 
