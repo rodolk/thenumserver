@@ -22,7 +22,10 @@ To be able to build with javadoc you need to have library tools.jar that comes w
 In Ubuntu, install JDK 8 with:
 `sudo apt-get install openjdk-8-jdk`
 
-Otherwise javadoc generation will fail!!!
+In Red Hat and AWS I had to install:
+`yum install java-1.8.0-openjdk-devel`
+
+Otherwise build and javadoc generation will fail!!!
 
 ## Gradle
 
